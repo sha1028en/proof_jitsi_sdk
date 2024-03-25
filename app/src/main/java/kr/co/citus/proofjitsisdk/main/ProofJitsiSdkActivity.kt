@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
+import android.widget.ToggleButton
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -23,10 +25,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.giphy.sdk.ui.themes.Theme
 import kr.co.citus.proofjitsisdk.BuildConfig
 import kr.co.citus.proofjitsisdk.ui.theme.ProofJitsiSDKTheme
 
@@ -164,7 +173,6 @@ private fun BuildJitsiControlPanel() {
 
                 BuildButton("Disconnect", onClickEvent = {
                     disconnect(it)
-
                 })
             }
             Box(modifier = Modifier.height(48.dp))
@@ -180,6 +188,19 @@ private fun BuildButton(msg: String, onClickEvent: (localContext: Context) -> Un
         onClickEvent(localContext)
 
     }) {
+        Text(text = msg, modifier = Modifier)
+    }
+}
+
+@Composable
+private fun BuildToggleButton(msg: String, state: MutableState<Boolean>, onClickEvent: (localContext: Context) -> Unit) {
+    val localContext = LocalContext.current
+
+    Button(modifier = Modifier, onClick = {
+        onClickEvent(localContext)
+
+    }) {
+
         Text(text = msg, modifier = Modifier)
     }
 }
