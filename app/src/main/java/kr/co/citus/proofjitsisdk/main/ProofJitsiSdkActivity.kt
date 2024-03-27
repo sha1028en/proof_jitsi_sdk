@@ -31,6 +31,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -158,9 +160,10 @@ private fun BuildJitsiControlPanel() {
                     toggleCam(it)
                 })
 
-                BuildButton("Mute Mic", onClickEvent = {
-                    setAudioMute(it, true)
-                })
+                BuildToggleButton(unToggleStateMsg = "Mute Mic", toggleStateMsg = "UnMute Mic",
+                    onClickEvent = { context, toggledState ->
+                        setAudioMute(context, toggledState)
+                    })
             }
 
             Row (modifier = Modifier
@@ -193,15 +196,24 @@ private fun BuildButton(msg: String, onClickEvent: (localContext: Context) -> Un
 }
 
 @Composable
-private fun BuildToggleButton(msg: String, state: MutableState<Boolean>, onClickEvent: (localContext: Context) -> Unit) {
+private fun BuildToggleButton(unToggleStateMsg: String, toggleStateMsg: String,
+                              onClickEvent: (localContext: Context, toggledState: Boolean) -> Unit) {
     val localContext = LocalContext.current
+    val toggleState = remember { mutableStateOf(false) }
 
     Button(modifier = Modifier, onClick = {
-        onClickEvent(localContext)
+        toggleState.value = !toggleState.value
+        onClickEvent(localContext, toggleState.value)
 
     }) {
+        Text(text =
+            if (toggleState.value) {
+                toggleStateMsg
 
-        Text(text = msg, modifier = Modifier)
+            } else {
+                unToggleStateMsg
+            },
+            modifier = Modifier)
     }
 }
 
